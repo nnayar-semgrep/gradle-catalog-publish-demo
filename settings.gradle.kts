@@ -1,3 +1,4 @@
+enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = providers.gradleProperty("libName").forUseAtConfigurationTime().get()
 
