@@ -34,6 +34,7 @@ jobs:
           libVersion=1.0.0
           oss.user=dummy
           oss.key=dummy
+          oss.stagingProfileId=dummy
           oss.token=dummy
           signing.keyId=dummy
           signing.password=dummy
