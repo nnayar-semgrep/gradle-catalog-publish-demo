@@ -2,13 +2,6 @@ name: Generate Gradle Lockfile
 
 on:
   workflow_dispatch:  # Manual trigger
-  schedule:
-    - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight
-  push:
-    paths:
-      - 'gradle/libs.versions.toml'
-      - 'build.gradle.kts'
-      - '**/build.gradle.kts'
 
 jobs:
   buildGradleLockFile:
@@ -31,10 +24,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: wrapper
+          gradle-version: '8.5'
 
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
+
+      - name: Check Gradle version
+        run: ./gradlew --version
 
       - name: Generate lockfiles
         run: |
