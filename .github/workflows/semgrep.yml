@@ -11,7 +11,7 @@ on:
       - '**/build.gradle.kts'
 
 jobs:
-  update-locks:
+  buildGradleLockFile:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -33,21 +33,32 @@ jobs:
         with:
           gradle-version: wrapper
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Generate lockfiles
         run: |
           ./gradlew dependencies --write-locks
           
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+      - name: Upload Gradle Lock File
+        uses: actions/upload-artifact@v3
         with:
-          commit-message: "chore: Update Gradle dependency locks"
-          title: "chore: Update Gradle dependency locks"
-          body: |
-            This PR updates the Gradle dependency locks.
-            
-            - Generated automatically by GitHub Actions
-            - Review the changes carefully before merging
-          branch: "chore/update-gradle-locks"
-          base: "main"
-          labels: "dependencies,automated pr"
-          draft: false
+          name: gradlelockfile
+          path: gradle.lockfile
+  semgrep:
+    needs: buildGradleLockFile
+    name: Scan
+    runs-on: ubuntu-20.04
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download artifact from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: gradlelockfile
+      - run: |
+            ls -lah
+            semgrep ci --supply-chain --verbose
