@@ -19,6 +19,13 @@ jobs:
       - name: Check Gradle version
         run: gradle --version
 
+      - name: Enable Version Catalogs
+        run: |
+          echo "enableFeaturePreview(\"VERSION_CATALOGS\")" >> settings.gradle.kts
+          if [ -d "buildSrc" ]; then
+            echo "enableFeaturePreview(\"VERSION_CATALOGS\")" >> buildSrc/settings.gradle.kts
+          fi
+
       - name: Generate lockfiles
         run: |
           gradle dependencies --write-locks --warning-mode all
