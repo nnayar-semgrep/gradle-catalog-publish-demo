@@ -30,6 +30,7 @@ jobs:
         run: |
           cat << EOF > gradle.properties
           libName=catalogs
+          libGroup=com.example
           oss.user=dummy
           oss.key=dummy
           oss.token=dummy
