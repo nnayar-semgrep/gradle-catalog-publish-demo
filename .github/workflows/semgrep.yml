@@ -7,7 +7,7 @@ jobs:
   buildGradleLockFile:
     runs-on: ubuntu-latest
     container:
-      image: gradle:8.5-jdk17
+      image: gradle:7.0-jdk11
     permissions:
       contents: write
       pull-requests: write
