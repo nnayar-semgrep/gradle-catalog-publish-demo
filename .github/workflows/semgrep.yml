@@ -26,6 +26,18 @@ jobs:
             echo "enableFeaturePreview(\"VERSION_CATALOGS\")" >> buildSrc/settings.gradle.kts
           fi
 
+      - name: Create gradle.properties
+        run: |
+          cat << EOF > gradle.properties
+          oss.user=dummy
+          oss.key=dummy
+          oss.token=dummy
+          signing.keyId=dummy
+          signing.password=dummy
+          signing.key=dummy
+          EOF
+
+
       - name: Generate lockfiles
         run: |
           gradle dependencies --write-locks --warning-mode all
