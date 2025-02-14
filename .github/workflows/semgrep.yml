@@ -1,0 +1,53 @@
+name: Generate Gradle Lockfile
+
+on:
+  workflow_dispatch:  # Manual trigger
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight
+  push:
+    paths:
+      - 'gradle/libs.versions.toml'
+      - 'build.gradle.kts'
+      - '**/build.gradle.kts'
+
+jobs:
+  update-locks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: wrapper
+
+      - name: Generate lockfiles
+        run: |
+          ./gradlew dependencies --write-locks
+          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "chore: Update Gradle dependency locks"
+          title: "chore: Update Gradle dependency locks"
+          body: |
+            This PR updates the Gradle dependency locks.
+            
+            - Generated automatically by GitHub Actions
+            - Review the changes carefully before merging
+          branch: "chore/update-gradle-locks"
+          base: "main"
+          labels: "dependencies,automated pr"
+          draft: false
