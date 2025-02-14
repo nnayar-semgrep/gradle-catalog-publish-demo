@@ -54,7 +54,7 @@ jobs:
     container:
       image: returntocorp/semgrep
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download artifact from previous job
         uses: actions/download-artifact@v3
         with:
