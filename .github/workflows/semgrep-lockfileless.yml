@@ -23,4 +23,4 @@ jobs:
     - uses: actions/checkout@v4
     - run: |
         apk add openjdk21 # Add ecosystem specific installs here
-        semgrep ci --allow-local-builds --verbose
+        semgrep ci --allow-local-builds --verbose --supply-chain
